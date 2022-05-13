@@ -1,7 +1,10 @@
 #include <Esplora.h>
 
+#define SerialSpeed 115200    // Vitese de communication série
+
+
 void setup() {
-  // put your setup code here, to run once:
+  Serial.begin(SerialSpeed);
 
 }
 
