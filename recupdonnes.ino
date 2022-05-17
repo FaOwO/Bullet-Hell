@@ -14,9 +14,13 @@ void loop() {
   Serial.print(";");
   Serial.print(Esplora.readJoystickY());
   Serial.print(";");
+  Serial.print(Esplora.readButton(1));
+  Serial.print(";");
   Serial.print(Esplora.readButton(2));
   Serial.print(";");
   Serial.print(Esplora.readButton(3));
+  Serial.print(";");
+  Serial.print(Esplora.readButton(4));
   Serial.print(";");
   Serial.println();  
 }
