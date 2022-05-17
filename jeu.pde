@@ -1,31 +1,76 @@
 import processing.serial.*;
 
-char c;
-String chaineRecup;
+
+int largeur = 640;
+int hauteur = 960;
+
+String val;
 String [] dataTrie;
-int redperso = 320;
-int bluepersoX = 0;
-int bluepersoY = 0;
+
+int redperso = largeur/2;
+int bluepersoX = largeur/2;
+int bluepersoY = hauteur/2;
+
 PImage tank;
 PImage vaisseau;
 
+Serial port;
+int lf = 10;
+
+Boolean leftred = false;
+Boolean rightred = false;
+
+Boolean leftblue = false;
+Boolean rightblue = false;
+Boolean upblue = false;
+Boolean downblue = false;
+
+int vitesse = 5;
 
 void setup()
 {
   size(640,960);
   tank = loadImage("RedPlayer.png");
   vaisseau = loadImage("BluePlayer.png");
-  
-  list_des_ports=Serial.list();
-  
-  NomDuPort = Serial.list()[indice_port];
-  ArduinoSerialPort = new Serial(this, NomDuPort, serialSpeed);
+   
+  String nomDuPort = Serial.list()[0];
+  port = new Serial(this, nomDuPort, 9600);
+  port.bufferUntil(lf);
 }
 
 void draw()
 {
   background(3,34,76);
-  image(tank,redperso,850);
+  
+  
+  if (leftred){
+    if (redperso >= 0) redperso -= vitesse;
+  }
+  
+  if (rightred){
+    if (redperso <= largeur - 38) redperso += vitesse;
+  }
+  
+  image(tank,redperso,930);
+  
+  
+  
+  if (leftblue){
+    if (bluepersoX >= 0) bluepersoX -= vitesse;
+  }
+  
+  if (rightblue){
+    if (bluepersoX <= largeur - 28) bluepersoX += vitesse;
+  }
+  
+  if (upblue){
+    if (bluepersoY <= hauteur - 250) bluepersoY += vitesse;
+  }
+  
+  if (downblue){
+    if (bluepersoY >= 0) bluepersoY -= vitesse;
+  }
+  
   image(vaisseau, bluepersoX, bluepersoY);
 }
 
@@ -33,19 +78,41 @@ void keyPressed()
 {
   if (key == CODED) {
     if (keyCode == LEFT) {
-      redperso -= 5;}
+      leftred = true;}
+      
     if (keyCode == RIGHT) {
-      redperso += 5;}
+      rightred = true;}
   }
 }
 
-void serialEvent(Serial ArduinoSerialPort)
-{
-  c = char(ArduinoSerialPort.read());
-  if (c != '#' && c != '@'){
-    chaineRecup += c;
+void keyReleased(){
+  if (key == CODED){
+    if (keyCode == LEFT){
+      leftred = false;
+    }
+    
+    if (keyCode == RIGHT){
+      rightred = false;
+    }
   }
-  dataTrie = split(chaineRecup, ";");
-  bluepersoX = int(dataTrie[0]);
-  bluepersoY = int(dataTrie[1]);
+}
+void serialEvent(Serial port){
+  val = port.readStringUntil('\n');
+  dataTrie = split(val, ";");
+  
+  if (int(dataTrie[0]) >= 20){
+    rightblue = true;
+  } else rightblue = false;
+  
+  if (int(dataTrie[0]) <= -20){
+    leftblue = true;
+  } else leftblue = false;
+  
+  if (int(dataTrie[1]) >= 20){
+  downblue = true;
+  } else downblue = false;
+  
+  if (int(dataTrie[1]) <= -20){
+  upblue = true;
+  } else upblue = false;
 }
