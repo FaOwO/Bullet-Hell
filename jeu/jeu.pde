@@ -39,8 +39,8 @@ Boolean canShootRed = true;
 Boolean canShootBlue = true;
 
 int vitesse = 5;
-int vitesseBullet = 6;
-int timerbeforeshoot = 200;
+int vitesseBullet = 7;
+int timerbeforeshoot = 300;
 
 ArrayList<RedBullet> listRedBullet = new ArrayList<RedBullet>();
 ArrayList<BlueBullet> listBlueBullet = new ArrayList<BlueBullet>();
