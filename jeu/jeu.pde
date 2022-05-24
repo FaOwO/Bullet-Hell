@@ -17,6 +17,7 @@ int indice_port=0;
 
 PImage tank;
 PImage vaisseau;
+PImage redBullet;
 
 Serial port;
 int lf = 10;
@@ -31,12 +32,32 @@ Boolean downblue = false;
 
 int vitesse = 5;
 
+String []listRedBullet;
+String []listBlueBullet;
+
+
+class RedBullet {
+  int xpos, ypos;
+  RedBullet(int X) {
+    xpos = X;
+    ypos = 930;
+  }
+}
+
+class BlueBullet {
+  int xpos, ypos;
+  BlueBullet(int X, int Y) {
+    xpos = X;
+    ypos = Y;
+  }
+}
+
 void setup()
 {
   size(640,960);
   tank = loadImage("RedPlayer.png");
   vaisseau = loadImage("BluePlayer.png");
-   
+  redBullet = loadImage("RedBullet.png");
   list_des_ports=Serial.list();
   long_list_port = list_des_ports.length;
   if (long_list_port>1) {
@@ -92,7 +113,10 @@ void keyPressed()
       leftred = true;}
       
     if (keyCode == RIGHT) {
-      rightred = true;}   
+      rightred = true;}
+    
+    if (keyCode == ENTER) {
+      listRedBullet.append(RedBullet(redperso));}
   }
   if (key == 'Q'|| key == 'q'){
     rightblue = true;}
