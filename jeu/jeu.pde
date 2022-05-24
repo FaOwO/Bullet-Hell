@@ -6,10 +6,14 @@ int hauteur = 960;
 
 String val;
 String [] dataTrie;
+String []list_des_ports;
 
 int redperso = largeur/2;
 int bluepersoX = largeur/2;
 int bluepersoY = hauteur/2;
+
+int long_list_port;
+int indice_port=0;
 
 PImage tank;
 PImage vaisseau;
@@ -33,7 +37,12 @@ void setup()
   tank = loadImage("RedPlayer.png");
   vaisseau = loadImage("BluePlayer.png");
    
-  String nomDuPort = Serial.list()[0];
+  list_des_ports=Serial.list();
+  long_list_port = list_des_ports.length;
+  if (long_list_port>1) {
+  indice_port=1;
+  }
+  String nomDuPort = Serial.list()[indice_port];
   port = new Serial(this, nomDuPort, 9600);
   port.bufferUntil(lf);
 }
