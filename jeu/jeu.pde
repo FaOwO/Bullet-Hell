@@ -18,6 +18,7 @@ int indice_port=0;
 PImage tank;
 PImage vaisseau;
 PImage redBullet;
+PImage blueBullet;
 
 Serial port;
 int lf = 10;
@@ -30,17 +31,24 @@ Boolean rightblue = false;
 Boolean upblue = false;
 Boolean downblue = false;
 
+Boolean rbullet = false;
+Boolean bbullet = false;
 int vitesse = 5;
+int vitesseBullet = 8;
 
-String []listRedBullet;
-String []listBlueBullet;
+ArrayList<RedBullet> listRedBullet = new ArrayList<RedBullet>();
+ArrayList<BlueBullet> listBlueBullet = new ArrayList<BlueBullet>();
 
 
 class RedBullet {
   int xpos, ypos;
-  RedBullet(int X) {
+  RedBullet (int X) {
     xpos = X;
     ypos = 930;
+  }
+  void update(){
+    ypos-= vitesseBullet;
+    
   }
 }
 
@@ -50,6 +58,12 @@ class BlueBullet {
     xpos = X;
     ypos = Y;
   }
+  void update(){
+    ypos+= vitesseBullet;
+    if (ypos > hauteur){
+      
+    }
+  }
 }
 
 void setup()
@@ -58,14 +72,16 @@ void setup()
   tank = loadImage("RedPlayer.png");
   vaisseau = loadImage("BluePlayer.png");
   redBullet = loadImage("RedBullet.png");
+  blueBullet = loadImage("BlueBullet.png");
   list_des_ports=Serial.list();
   long_list_port = list_des_ports.length;
+  if (long_list_port>0){
   if (long_list_port>1) {
   indice_port=1;
   }
   String nomDuPort = Serial.list()[indice_port];
   port = new Serial(this, nomDuPort, 9600);
-  port.bufferUntil(lf);
+  port.bufferUntil(lf);}
 }
 
 void draw()
@@ -102,8 +118,23 @@ void draw()
   if (downblue){
     if (bluepersoY >= 0) bluepersoY -= vitesse;
   }
-  
+  if (bbullet){
+    listBlueBullet.add(new BlueBullet(bluepersoX+12,bluepersoY+26));}
+    
+  if (rbullet){
+    listRedBullet.add(new RedBullet(redperso+16));}
+    
   image(vaisseau, bluepersoX, bluepersoY);
+  if (listRedBullet != null){
+  for (int i = 0; i < listRedBullet.size(); i++){
+    listRedBullet.get(i).update();
+    image(redBullet,listRedBullet.get(i).xpos,listRedBullet.get(i).ypos);}
+  }
+    if (listBlueBullet != null){
+  for (int i = 0; i < listBlueBullet.size(); i++){
+    listBlueBullet.get(i).update();
+    image(blueBullet,listBlueBullet.get(i).xpos,listBlueBullet.get(i).ypos);}
+  }
 }
 
 void keyPressed()
@@ -114,10 +145,11 @@ void keyPressed()
       
     if (keyCode == RIGHT) {
       rightred = true;}
-    
-    if (keyCode == ENTER) {
-      listRedBullet.append(RedBullet(redperso));}
-  }
+  }  
+  if (key == ENTER) {
+    rbullet = true;}
+  if (key == ' '){
+    bbullet = true;}
   if (key == 'Q'|| key == 'q'){
     rightblue = true;}
   if (key == 'Z'|| key == 'z'){
@@ -146,6 +178,10 @@ void keyReleased(){
     downblue = false;}
   if (key == 'D'|| key == 'd'){
     leftblue = false;}
+  if (key == ' '){
+    bbullet = false;}
+  if (key == ENTER) {
+    rbullet = false;}
  
 }
 void serialEvent(Serial port){
@@ -168,5 +204,9 @@ void serialEvent(Serial port){
   if (int(dataTrie[1]) <= -20){
   upblue = true;
   } else upblue = false;
+  
+  if (int(dataTrie[2]) == 0 || int(dataTrie[3]) == 0){
+    bbullet = true;
+  }else bbullet = false;
   }
 }
