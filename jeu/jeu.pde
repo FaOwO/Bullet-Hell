@@ -83,7 +83,6 @@ void draw()
   }
   
   image(vaisseau, bluepersoX, bluepersoY);
-  println(bluepersoX, bluepersoY, redperso);
 }
 
 void keyPressed()
@@ -93,8 +92,16 @@ void keyPressed()
       leftred = true;}
       
     if (keyCode == RIGHT) {
-      rightred = true;}
+      rightred = true;}   
   }
+  if (key == 'Q'|| key == 'q'){
+    rightblue = true;}
+  if (key == 'Z'|| key == 'z'){
+    upblue = true;}
+  if (key == 'S'|| key == 's'){
+    downblue = true;}
+  if (key == 'D'|| key == 'd'){
+    leftblue = true;}
 }
 
 void keyReleased(){
@@ -107,9 +114,19 @@ void keyReleased(){
       rightred = false;
     }
   }
+  if (key == 'Q'|| key == 'q'){
+    rightblue = false;}
+  if (key == 'Z'|| key == 'z'){
+    upblue = false;}
+  if (key == 'S'|| key == 's'){
+    downblue = false;}
+  if (key == 'D'|| key == 'd'){
+    leftblue = false;}
+ 
 }
 void serialEvent(Serial port){
   val = port.readStringUntil('\n');
+  if (val.length() >= 1){
   dataTrie = split(val, ";");
   
   if (int(dataTrie[0]) >= 20){
@@ -127,4 +144,5 @@ void serialEvent(Serial port){
   if (int(dataTrie[1]) <= -20){
   upblue = true;
   } else upblue = false;
+  }
 }
