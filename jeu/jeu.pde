@@ -22,6 +22,8 @@ PImage blueBullet;
 
 Serial port;
 int lf = 10;
+int timerRed = 0;
+int timerBlue = 0;
 
 Boolean leftred = false;
 Boolean rightred = false;
@@ -33,8 +35,12 @@ Boolean downblue = false;
 
 Boolean rbullet = false;
 Boolean bbullet = false;
+Boolean canShootRed = true;
+Boolean canShootBlue = true;
+
 int vitesse = 5;
-int vitesseBullet = 8;
+int vitesseBullet = 6;
+int timerbeforeshoot = 200;
 
 ArrayList<RedBullet> listRedBullet = new ArrayList<RedBullet>();
 ArrayList<BlueBullet> listBlueBullet = new ArrayList<BlueBullet>();
@@ -118,12 +124,28 @@ void draw()
   if (downblue){
     if (bluepersoY >= 0) bluepersoY -= vitesse;
   }
-  if (bbullet){
-    listBlueBullet.add(new BlueBullet(bluepersoX+12,bluepersoY+26));}
+  if (bbullet && canShootBlue){
+    listBlueBullet.add(new BlueBullet(bluepersoX+12,bluepersoY+26));
+    canShootBlue = false;
+    timerBlue = millis();
+    }
     
-  if (rbullet){
-    listRedBullet.add(new RedBullet(redperso+16));}
+  if (rbullet && canShootRed){
+    listRedBullet.add(new RedBullet(redperso+16));
+    canShootRed = false;
+    timerRed = millis();
+    }
     
+  if (canShootRed == false){
+    if (timerRed + timerbeforeshoot < millis()){
+      canShootRed = true;}
+  }
+  
+  if (canShootBlue == false){
+    if (timerBlue + timerbeforeshoot < millis()){
+      canShootBlue = true;}
+  }
+  
   image(vaisseau, bluepersoX, bluepersoY);
   if (listRedBullet != null){
   for (int i = 0; i < listRedBullet.size(); i++){
