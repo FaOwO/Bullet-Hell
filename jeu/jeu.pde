@@ -50,6 +50,8 @@ void setup()
 void draw()
 {
   background(3,34,76);
+  fill(0,128,0);
+  rect(0,950,640,960);
   
   
   if (leftred){
@@ -81,6 +83,7 @@ void draw()
   }
   
   image(vaisseau, bluepersoX, bluepersoY);
+  println(bluepersoX, bluepersoY, redperso);
 }
 
 void keyPressed()
