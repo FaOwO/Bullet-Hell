@@ -19,6 +19,13 @@ PImage tank;
 PImage vaisseau;
 PImage redBullet;
 PImage blueBullet;
+PImage RedHeart1;
+PImage RedHeart2;
+PImage RedHeart3;
+PImage BlueHeart1;
+PImage BlueHeart2;
+PImage BlueHeart3;
+PImage GameOver;
 
 Serial port;
 int lf = 10;
@@ -85,6 +92,13 @@ void setup()
   vaisseau = loadImage("BluePlayer.png");
   redBullet = loadImage("RedBullet.png");
   blueBullet = loadImage("BlueBullet.png");
+  RedHeart1 = loadImage("heartRed1.png");
+  RedHeart2 = loadImage("heartRed2.png");
+  RedHeart3 = loadImage("heartRed3.png");
+  BlueHeart1 = loadImage("heartBlue1.png");
+  BlueHeart2 = loadImage("heartBlue2.png");
+  BlueHeart3 = loadImage("heartBlue3.png");
+  GameOver = loadImage("gameover.png");
   list_des_ports=Serial.list();
   long_list_port = list_des_ports.length;
   if (long_list_port>0){
@@ -171,7 +185,6 @@ void draw()
       lifeBlue -= 1;
       canHitBlue = false;
       timerBlueH = millis();
-      print(lifeBlue);
       }
       
     if(listRedBullet.get(i).ypos < 0){
@@ -189,7 +202,6 @@ void draw()
       lifeRed -= 1;
       canHitRed = false;
       timerRedH = millis();
-      print(lifeRed);
       }
       
     if(listBlueBullet.get(i).ypos > hauteur){
@@ -197,6 +209,25 @@ void draw()
       }
     }
   }
+  
+  if(lifeRed == 1){
+    image(RedHeart1, 0, 0);}
+  if(lifeRed == 2){
+    image(RedHeart2, 0, 0);}
+  if(lifeRed == 3){
+    image(RedHeart3, 0, 0);}
+    
+  if(lifeBlue == 1){
+    image(BlueHeart1, largeur-28, 0);}
+  if(lifeBlue == 2){
+    image(BlueHeart2, largeur-56, 0);}
+  if(lifeBlue == 3){
+    image(BlueHeart3, largeur-84, 0);}
+    
+  if(lifeRed == 0 || lifeBlue == 0){
+    imageMode(CENTER);
+    image(GameOver, largeur/2, hauteur/2);
+    noLoop();}
 }
 void keyPressed()
 {
