@@ -22,8 +22,14 @@ PImage blueBullet;
 
 Serial port;
 int lf = 10;
-int timerRed = 0;
-int timerBlue = 0;
+int timerRedB = 0;
+int timerBlueB = 0;
+
+int timerRedH = 0;
+int timerBlueH = 0;
+
+int lifeBlue = 3;
+int lifeRed = 3;
 
 Boolean leftred = false;
 Boolean rightred = false;
@@ -37,10 +43,13 @@ Boolean rbullet = false;
 Boolean bbullet = false;
 Boolean canShootRed = true;
 Boolean canShootBlue = true;
+Boolean canHitBlue = true;
+Boolean canHitRed = true;
 
 int vitesse = 5;
 int vitesseBullet = 7;
 int timerbeforeshoot = 300;
+int invincibilite = 500;
 
 ArrayList<RedBullet> listRedBullet = new ArrayList<RedBullet>();
 ArrayList<BlueBullet> listBlueBullet = new ArrayList<BlueBullet>();
@@ -124,44 +133,69 @@ void draw()
   if (bbullet && canShootBlue){
     listBlueBullet.add(new BlueBullet(bluepersoX+12,bluepersoY+26));
     canShootBlue = false;
-    timerBlue = millis();
+    timerBlueB = millis();
     }
     
   if (rbullet && canShootRed){
     listRedBullet.add(new RedBullet(redperso+16));
     canShootRed = false;
-    timerRed = millis();
+    timerRedB = millis();
     }
     
   if (canShootRed == false){
-    if (timerRed + timerbeforeshoot < millis()){
+    if (timerRedB + timerbeforeshoot < millis()){
       canShootRed = true;}
   }
   
   if (canShootBlue == false){
-    if (timerBlue + timerbeforeshoot < millis()){
+    if (timerBlueB + timerbeforeshoot < millis()){
       canShootBlue = true;}
   }
-  
+  if (canHitBlue == false){
+    if (timerBlueH + invincibilite < millis()){
+      canHitBlue = true;}
+  }
+  if (canHitRed == false){
+    if (timerRedH + invincibilite < millis()){
+      canHitRed = true;}
+  }
   image(vaisseau, bluepersoX, bluepersoY);
   
   if (listRedBullet != null){
   for (int i = 0; i < listRedBullet.size(); i++){
     listRedBullet.get(i).update();
     image(redBullet,listRedBullet.get(i).xpos,listRedBullet.get(i).ypos);
+    
+    if (((bluepersoX < listRedBullet.get(i).xpos + 3) && (listRedBullet.get(i).xpos + 3 < bluepersoX + 28)) && 
+      ((bluepersoY < listRedBullet.get(i).ypos) &&(listRedBullet.get(i).ypos < bluepersoY + 26)) && canHitBlue){
+      lifeBlue -= 1;
+      canHitBlue = false;
+      timerBlueH = millis();
+      print(lifeBlue);
+      }
+      
     if(listRedBullet.get(i).ypos < 0){
       listRedBullet.remove(i);
+      }
     }
-  }
   }
   if (listBlueBullet != null){
   for (int i = 0; i < listBlueBullet.size(); i++){
     listBlueBullet.get(i).update();
     image(blueBullet,listBlueBullet.get(i).xpos,listBlueBullet.get(i).ypos);
+    
+        if (((redperso < listBlueBullet.get(i).xpos + 2) && (listBlueBullet.get(i).xpos + 2 < redperso + 38)) && 
+      ((hauteur - 28 < listBlueBullet.get(i).ypos) &&(listBlueBullet.get(i).ypos < hauteur)) && canHitRed){
+      lifeRed -= 1;
+      canHitRed = false;
+      timerRedH = millis();
+      print(lifeRed);
+      }
+      
     if(listBlueBullet.get(i).ypos > hauteur){
       listBlueBullet.remove(i);
+      }
     }
-  }
   }
 }
 void keyPressed()
@@ -178,13 +212,13 @@ void keyPressed()
   if (key == ' '){
     bbullet = true;}
   if (key == 'Q'|| key == 'q'){
-    rightblue = true;}
-  if (key == 'Z'|| key == 'z'){
-    upblue = true;}
-  if (key == 'S'|| key == 's'){
-    downblue = true;}
-  if (key == 'D'|| key == 'd'){
     leftblue = true;}
+  if (key == 'Z'|| key == 'z'){
+    downblue = true;}
+  if (key == 'S'|| key == 's'){
+    upblue = true;}
+  if (key == 'D'|| key == 'd'){
+    rightblue = true;}
 }
 
 void keyReleased(){
@@ -198,13 +232,13 @@ void keyReleased(){
     }
   }
   if (key == 'Q'|| key == 'q'){
-    rightblue = false;}
-  if (key == 'Z'|| key == 'z'){
-    upblue = false;}
-  if (key == 'S'|| key == 's'){
-    downblue = false;}
-  if (key == 'D'|| key == 'd'){
     leftblue = false;}
+  if (key == 'Z'|| key == 'z'){
+    downblue = false;}
+  if (key == 'S'|| key == 's'){
+    upblue = false;}
+  if (key == 'D'|| key == 'd'){
+    rightblue = false;}
   if (key == ' '){
     bbullet = false;}
   if (key == ENTER) {
@@ -217,20 +251,20 @@ void serialEvent(Serial port){
   dataTrie = split(val, ";");
   
   if (int(dataTrie[0]) >= 20){
-    rightblue = true;
-  } else rightblue = false;
-  
-  if (int(dataTrie[0]) <= -20){
     leftblue = true;
   } else leftblue = false;
   
-  if (int(dataTrie[1]) >= 20){
-  downblue = true;
-  } else downblue = false;
+  if (int(dataTrie[0]) <= -20){
+    rightblue = true;
+  } else rightblue = false;
   
-  if (int(dataTrie[1]) <= -20){
+  if (int(dataTrie[1]) >= 20){
   upblue = true;
   } else upblue = false;
+  
+  if (int(dataTrie[1]) <= -20){
+  downblue = true;
+  } else downblue = false;
   
   if (int(dataTrie[2]) == 0 || int(dataTrie[3]) == 0){
     bbullet = true;
