@@ -66,9 +66,6 @@ class BlueBullet {
   }
   void update(){
     ypos+= vitesseBullet;
-    if (ypos > hauteur){
-      
-    }
   }
 }
 
@@ -147,18 +144,26 @@ void draw()
   }
   
   image(vaisseau, bluepersoX, bluepersoY);
+  
   if (listRedBullet != null){
   for (int i = 0; i < listRedBullet.size(); i++){
     listRedBullet.get(i).update();
-    image(redBullet,listRedBullet.get(i).xpos,listRedBullet.get(i).ypos);}
+    image(redBullet,listRedBullet.get(i).xpos,listRedBullet.get(i).ypos);
+    if(listRedBullet.get(i).ypos < 0){
+      listRedBullet.remove(i);
+    }
   }
-    if (listBlueBullet != null){
+  }
+  if (listBlueBullet != null){
   for (int i = 0; i < listBlueBullet.size(); i++){
     listBlueBullet.get(i).update();
-    image(blueBullet,listBlueBullet.get(i).xpos,listBlueBullet.get(i).ypos);}
+    image(blueBullet,listBlueBullet.get(i).xpos,listBlueBullet.get(i).ypos);
+    if(listBlueBullet.get(i).ypos > hauteur){
+      listBlueBullet.remove(i);
+    }
+  }
   }
 }
-
 void keyPressed()
 {
   if (key == CODED) {
