@@ -54,8 +54,8 @@ Boolean canHitBlue = true;
 Boolean canHitRed = true;
 
 int vitesse = 5;
-int vitesseBullet = 7;
-int timerbeforeshoot = 300;
+int vitesseBullet = 8;
+int timerbeforeshoot = 250;
 int invincibilite = 500;
 
 ArrayList<RedBullet> listRedBullet = new ArrayList<RedBullet>();
@@ -69,7 +69,7 @@ class RedBullet {
     ypos = 930;
   }
   void update(){
-    ypos-= vitesseBullet;
+    ypos-= vitesseBullet + 2;
     
   }
 }
@@ -118,11 +118,11 @@ void draw()
   
   
   if (leftred){
-    if (redperso >= 0) redperso -= vitesse;
+    if (redperso >= 0) redperso -= vitesse + 2;
   }
   
   if (rightred){
-    if (redperso <= largeur - 38) redperso += vitesse;
+    if (redperso <= largeur - 38) redperso += vitesse + 2;
   }
   
   image(tank,redperso,930);
