@@ -43,6 +43,7 @@ int timerBlueH = 0;
 int lifeBlue = 3;
 int lifeRed = 3;
 
+Boolean gameStatus = true;
 Boolean leftred = false;
 Boolean rightred = false;
 
@@ -119,6 +120,7 @@ void setup()
   pwee = new SoundFile(this, "pwee.wav");
   pwee.amp(0.6);
   battle = new SoundFile(this, "battle.wav");
+  battle.amp(0.8);
   battle.play();
   battle.loop();
   lose = new SoundFile(this, "lose.wav");
@@ -244,6 +246,7 @@ void draw()
     imageMode(CENTER);
     image(GameOver, largeur/2, hauteur/2);
     lose.play();
+    gameStatus = false;
     battle.stop();
     noLoop();}
 }
@@ -255,7 +258,21 @@ void keyPressed()
       
     if (keyCode == RIGHT) {
       rightred = true;}
-  }  
+  }
+  if ((key == 'r' || key == 'R') && gameStatus == false){
+    gameStatus = true;
+    imageMode(CORNER);
+    loop();
+    lifeBlue = 3;
+    lifeRed = 3;
+    redperso = largeur/2;
+    bluepersoX = largeur/2;
+    bluepersoY = hauteur/2;
+    listRedBullet = new ArrayList<RedBullet>();
+    listBlueBullet = new ArrayList<BlueBullet>();
+    battle.play();
+    battle.loop();
+  }
   if (key == ENTER) {
     rbullet = true;}
   if (key == ' '){
