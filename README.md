@@ -9,14 +9,19 @@ No problem if you don't have Arduino Esplora, you can play with the keyboard.
 With Processing Library "Sound", Download "Game with S".
 Without this Library, Download "Game without S".
 
+
 **HOW TO PLAY :**
 
 R for restarting game
+
+
 
 *Blue Player :*
 ZQSD for move
 
 SpaceBar for shoot
+
+
 
 *Red Player :*
 Arrows for move
