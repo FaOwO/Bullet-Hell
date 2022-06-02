@@ -1,5 +1,6 @@
 import processing.serial.*;
-
+import processing.sound.*;
+AudioSample sample;
 
 int largeur = 640;
 int hauteur = 960;
@@ -108,6 +109,9 @@ void setup()
   String nomDuPort = Serial.list()[indice_port];
   port = new Serial(this, nomDuPort, 9600);
   port.bufferUntil(lf);}
+  
+  piou = new SoundFile(this. "piou.wav");
+  
 }
 
 void draw()
