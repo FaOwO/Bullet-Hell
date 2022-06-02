@@ -14,16 +14,14 @@ Without this Library, Download "Game without S".
 
 R for restarting game
 
-
-
 *Blue Player :*
+
 ZQSD for move
 
 SpaceBar for shoot
 
-
-
 *Red Player :*
+
 Arrows for move
 
 Enter for shoot
