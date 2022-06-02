@@ -6,8 +6,7 @@ NSI Project for Arduino Esplora/Keyboard
 
 For Arduino Esplora support, Download "arduinoEsploraSupport".
 No problem if you don't have Arduino Esplora, you can play with the keyboard.
-With Processing Library "Sound", Download "gameWithS".
-Without this Library, Download "gameWithoutS".
+Download the Processing Library "Sound" and then execute "game.pde".
 
 
 **HOW TO PLAY :**
