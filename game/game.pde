@@ -172,6 +172,7 @@ void draw()
   
   
   
+  
   if (leftblue){
     if (bluepersoX >= 0) bluepersoX -= vitesse;
   }
@@ -335,6 +336,7 @@ void keyPressed()
     listRedBullet = new ArrayList<RedBullet>();
     listBlueBullet = new ArrayList<BlueBullet>();
     listNeutralBullet = new ArrayList<NeutralBullet>();
+    eventMeteor = false;
     time = millis();
     battle.play();
     battle.loop();
