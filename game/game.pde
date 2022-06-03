@@ -5,6 +5,7 @@ AudioSample piou;
 AudioSample pwee;
 AudioSample battle;
 AudioSample lose;
+AudioSample fireball;
 
 int largeur = 640;
 int hauteur = 960;
@@ -31,17 +32,18 @@ PImage BlueHeart1;
 PImage BlueHeart2;
 PImage BlueHeart3;
 PImage GameOver;
+PImage Meteorite;
 
 Serial port;
+int time = 0;
 int lf = 10;
 int timerRedB = 0;
 int timerBlueB = 0;
+int timerNeutral = 0;
+int rand;
 
 int timerRedH = 0;
 int timerBlueH = 0;
-
-int lifeBlue = 3;
-int lifeRed = 3;
 
 Boolean gameStatus = true;
 Boolean leftred = false;
@@ -58,15 +60,35 @@ Boolean canShootRed = true;
 Boolean canShootBlue = true;
 Boolean canHitBlue = true;
 Boolean canHitRed = true;
+Boolean canShootNeutral = false;
+
+Boolean eventMeteor = false;
 
 int vitesse = 5;
 int vitesseBullet = 8;
 int timerbeforeshoot = 250;
 int invincibilite = 500;
+int timerEvent = 18000;
+int lifeBlue = 3;
+int lifeRed = 3;
+int nbrEvent = 1;
+Boolean doEvent = true;
 
 ArrayList<RedBullet> listRedBullet = new ArrayList<RedBullet>();
 ArrayList<BlueBullet> listBlueBullet = new ArrayList<BlueBullet>();
+ArrayList<NeutralBullet> listNeutralBullet = new ArrayList<NeutralBullet>();
 
+class NeutralBullet {
+  int xpos, ypos;
+  NeutralBullet (int X) {
+    xpos = X;
+    ypos = 0;
+  }
+  void update(){
+    ypos+= vitesseBullet - 2;
+    
+  }
+}
 
 class RedBullet {
   int xpos, ypos;
@@ -93,6 +115,7 @@ class BlueBullet {
 
 void setup()
 {
+  time = millis();
   size(640,960);
   tank = loadImage("RedPlayer.png");
   vaisseau = loadImage("BluePlayer.png");
@@ -105,6 +128,8 @@ void setup()
   BlueHeart2 = loadImage("heartBlue2.png");
   BlueHeart3 = loadImage("heartBlue3.png");
   GameOver = loadImage("gameover.png");
+  Meteorite = loadImage("meteorite.png");
+  
   list_des_ports=Serial.list();
   long_list_port = list_des_ports.length;
   if (long_list_port>0){
@@ -115,6 +140,8 @@ void setup()
   port = new Serial(this, nomDuPort, 9600);
   port.bufferUntil(lf);}
   surface.setAlwaysOnTop(true);
+  fireball = new SoundFile(this, "fireball.wav");
+  fireball.amp(0.2);
   piou = new SoundFile(this, "piou.wav");
   piou.amp(0.6);
   pwee = new SoundFile(this, "pwee.wav");
@@ -227,7 +254,44 @@ void draw()
       }
     }
   }
+  if (listNeutralBullet != null){
+  for (int i = 0; i < listNeutralBullet.size(); i++){
+    listNeutralBullet.get(i).update();
+    image(Meteorite,listNeutralBullet.get(i).xpos,listNeutralBullet.get(i).ypos);
+        if (((bluepersoX < listNeutralBullet.get(i).xpos + 4) && (listNeutralBullet.get(i).xpos + 4 < bluepersoX + 28)) && 
+      ((bluepersoY < listNeutralBullet.get(i).ypos) &&(listNeutralBullet.get(i).ypos < bluepersoY + 26)) && canHitBlue){
+      lifeBlue -= 1;
+      canHitBlue = false;
+      timerBlueH = millis();}
   
+        if (((redperso < listNeutralBullet.get(i).xpos + 4) && (listNeutralBullet.get(i).xpos + 4 < redperso + 38)) && 
+      ((hauteur - 28 < listNeutralBullet.get(i).ypos) &&(listNeutralBullet.get(i).ypos < hauteur)) && canHitRed){
+      lifeRed -= 1;
+      canHitRed = false;
+      timerRedH = millis();
+      }
+  }}
+  if ((time + timerEvent < millis()) && doEvent){
+    time = millis();
+    listNeutralBullet = new ArrayList<NeutralBullet>();
+    rand = int(random(nbrEvent));
+    if (rand == 0){
+      eventMeteor = true;
+      canShootNeutral = true;
+  }
+}
+  if (eventMeteor && canShootNeutral){
+    listNeutralBullet.add(new NeutralBullet(int(random(0,largeur))));
+    fireball.play();
+    canShootNeutral = false;
+    timerNeutral = millis();
+    if (listNeutralBullet.size()> random(25,50)){
+      eventMeteor = false;}
+  }
+  if (timerNeutral + (timerbeforeshoot-100) < millis()){
+    canShootNeutral = true;
+  }
+   
   if(lifeRed == 1){
     image(RedHeart1, 0, 0);}
   if(lifeRed == 2){
@@ -270,6 +334,8 @@ void keyPressed()
     bluepersoY = hauteur/2;
     listRedBullet = new ArrayList<RedBullet>();
     listBlueBullet = new ArrayList<BlueBullet>();
+    listNeutralBullet = new ArrayList<NeutralBullet>();
+    time = millis();
     battle.play();
     battle.loop();
   }
